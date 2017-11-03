@@ -48,35 +48,39 @@ let g:python_host_prog = "/usr/local/bin/python2"
 let g:python3_host_prog = "/usr/local/bin/python3"
 syntax enable
 
-set background=dark
-colorscheme spacegray
-let g:molokai_original = 1
-
-nnoremap <Leader>f :NERDTreeToggle<Enter>
-nnoremap <silent> <Leader>v :NERDTreeFind<CR>
-nnoremap<Leader>p :PrettierAsync
-
+" Sane defaults
 set showcmd
 set incsearch
 set hlsearch
 set backspace=indent,eol,start
 set cursorline
+:command Q q
 
+" Useful Shortcuts
+nnoremap <Leader>f :NERDTreeToggle<Enter>
+nnoremap <silent> <Leader>v :NERDTreeFind<CR>
+nnoremap<Leader>p :PrettierAsync
+
+" Prettifying tyings
+set background=dark
+colorscheme spacegray
+let g:molokai_original = 1
 if (has("termguicolors"))
   set termguicolors
 endif
-
 let g:spacegray_underline_search = 1
 let g:spacegray_italicize_comments = 1
 
+" Deoplete Config
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#file#enable_buffer_path = 1
 
+" Prettier Format on Save
 let g:prettier#quickfix_enabled = 0
 let g:prettier#autoformat = 0
 autocmd BufWritePre,TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql PrettierAsync
-:command Q q
 
-" The Silver Searcher
+" The Silver Searcher & Ack and CtrlP
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
@@ -89,6 +93,5 @@ if executable('ag')
 endif
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_show_hidden = 1
-
 let g:ackprg = 'ag --vimgrep --smart-case'                                                   
 cnoreabbrev ag Ack!
