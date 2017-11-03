@@ -63,11 +63,11 @@ nnoremap<Leader>p :PrettierAsync
 
 " Prettifying tyings
 set background=dark
-colorscheme spacegray
 let g:molokai_original = 1
-if (has("termguicolors"))
-  set termguicolors
-endif
+colorscheme spacegray 
+"if (has("termguicolors"))
+"  set termguicolors
+"endif
 let g:spacegray_underline_search = 1
 let g:spacegray_italicize_comments = 1
 
