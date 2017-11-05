@@ -25,11 +25,15 @@ Plugin 'VundleVim/Vundle.vim'
 " Plugin 'scrooloose/syntastic'
 
 " For nvim-typescript
-" Plugin 'leafgarland/typescript-vim'
+Plugin 'leafgarland/typescript-vim'
 " Plugin 'mhartington/nvim-typescript'
 " Plugin 'herringtondarkholme/yats.vim'
+" Plugin 'neomake/neomake'
+Plugin 'w0rp/ale'
 
+Plugin 'autozimu/LanguageClient-neovim'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'tpope/vim-fugitive'
 Plugin 'bling/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'shougo/deoplete.nvim'
@@ -69,7 +73,8 @@ set hlsearch
 set backspace=indent,eol,start
 set cursorline
 :command Q q
-
+" Somewhat questionable, but needed for language server
+set hidden
 " Useful Shortcuts
 nnoremap<Leader>p :PrettierAsync
 
@@ -94,14 +99,23 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
+" Terminal Mapping
+tnoremap <Esc> <C-\><C-n>
+
 " Deoplete Config
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#file#enable_buffer_path = 1
-
+set cmdheight=2
+let g:deoplete#auto_complete_delay = 0
 " Prettier
+let g:prettier#exec_cmd_path = "/usr/local/bin/prettier"
 let g:prettier#quickfix_enabled = 0
 let g:prettier#autoformat = 0
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql PrettierAsync
+
+" ALE
+let g:airline#extensions#ale#enabled = 1
+let g:ale_linters = {'typescript': []}
 " Syntastic
 let g:syntastic_typescript_checkers = ['tslint']
 set statusline+=%#warningmsg#
@@ -113,8 +127,31 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+" Language Server
+
+let g:LanguageClient_serverCommands = {
+    \ 'typescript': ['/usr/local/bin/typescript-language-server', '--stdio'],
+    \ }
+let g:LanguageClient_autoStart = 1
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+set signcolumn=yes
+
+" neomake
+"   call neomake#configure#automake({
+"   \ 'TextChanged': {},
+"   \ 'InsertLeave': {},
+"   \ 'BufWritePost': {'delay': 0},
+"   \ 'BufWinEnter': {},
+"   \ }, 500)
+" let g:neomake_open_list = 2
+" let g:neomake_typescript_enabled_makers = ['tslint']
+
 " nvim-typescript
 let g:nvim_typescript#type_info_on_hold = 1
+let g:nvim_typescript#default_mappings = 1
+
 " The Silver Searcher & Ack and CtrlP
 if executable('ag')
   " Use ag over grep
