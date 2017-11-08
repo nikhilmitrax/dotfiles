@@ -32,7 +32,7 @@ Plugin 'leafgarland/typescript-vim'
 Plugin 'w0rp/ale'
 
 Plugin 'autozimu/LanguageClient-neovim'
-Plugin 'ctrlpvim/ctrlp.vim'
+" Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'bling/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
@@ -47,6 +47,10 @@ Plugin 'mileszs/ack.vim'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'dracula/vim'
 Plugin 'ayu-theme/ayu-vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'elzr/vim-json'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -73,17 +77,19 @@ set hlsearch
 set backspace=indent,eol,start
 set cursorline
 :command Q q
+:command JFormat %!jq '.'
 " Somewhat questionable, but needed for language server
 set hidden
 " Useful Shortcuts
 nnoremap<Leader>p :PrettierAsync
 
 " Prettifying tyings
-let ayucolor="mirage"
-colorscheme ayu
+" let ayucolor="mirage"
+colorscheme onedark 
 
 " Airline
-let g:airline_theme='deus'
+
+let g:airline_theme='onedark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
@@ -99,14 +105,27 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
-" Terminal Mapping
-tnoremap <Esc> <C-\><C-n>
+" Terminal Mapping (interferes with fzf)
+" tnoremap <Esc> <C-\><C-n>
+
+" FZF 
+let g:fzf_action = {
+      \ 'ctrl-s': 'split',
+      \ 'ctrl-v': 'vsplit'
+      \ }
+nnoremap <c-p> :FZF<cr>
+nnoremap <c-f> :call SearchWordWithAg()<CR>
+
+function! SearchWordWithAg()
+  execute 'Ag' expand('<cword>')
+endfunction
 
 " Deoplete Config
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#file#enable_buffer_path = 1
 set cmdheight=2
 let g:deoplete#auto_complete_delay = 0
+
 " Prettier
 let g:prettier#exec_cmd_path = "/usr/local/bin/prettier"
 let g:prettier#quickfix_enabled = 0
@@ -116,6 +135,7 @@ autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.gra
 " ALE
 let g:airline#extensions#ale#enabled = 1
 let g:ale_linters = {'typescript': []}
+
 " Syntastic
 let g:syntastic_typescript_checkers = ['tslint']
 set statusline+=%#warningmsg#
@@ -127,14 +147,36 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" Language Server
+" Tagbar
+let g:tagbar_type_typescript = {                                                  
+  \ 'ctagsbin' : 'tstags',                                                        
+  \ 'ctagsargs' : '-f-',                                                           
+  \ 'kinds': [                                                                     
+    \ 'e:enums:0:1',                                                               
+    \ 'f:function:0:1',                                                            
+    \ 't:typealias:0:1',                                                           
+    \ 'M:Module:0:1',                                                              
+    \ 'I:import:0:1',                                                              
+    \ 'i:interface:0:1',                                                           
+    \ 'C:class:0:1',                                                               
+    \ 'm:method:0:1',                                                              
+    \ 'p:property:0:1',                                                            
+    \ 'v:variable:0:1',                                                            
+    \ 'c:const:0:1',                                                              
+  \ ],                                                                            
+  \ 'sort' : 0                                                                    
+\ }
 
+
+" Language Server
 let g:LanguageClient_serverCommands = {
     \ 'typescript': ['/usr/local/bin/typescript-language-server', '--stdio'],
     \ }
 let g:LanguageClient_autoStart = 1
+let g:LanguageClient_changeThrottle = 0.5
 nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> gD :call LanguageClient_textDocument_references()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 set signcolumn=yes
 
@@ -149,21 +191,21 @@ set signcolumn=yes
 " let g:neomake_typescript_enabled_makers = ['tslint']
 
 " nvim-typescript
-let g:nvim_typescript#type_info_on_hold = 1
-let g:nvim_typescript#default_mappings = 1
+" let g:nvim_typescript#type_info_on_hold = 1
+" let g:nvim_typescript#default_mappings = 1
 
 " The Silver Searcher & Ack and CtrlP
-if executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-  " Use ag in CtrlP
-  " for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+" if executable('ag')
+"   " Use ag over grep
+"   set grepprg=ag\ --nogroup\ --nocolor
+"   " Use ag in CtrlP
+"   " for listing files. Lightning fast and respects .gitignore
+"   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-  let g:ackprg = 'ag --vimgrep --smart-case'                                                   
-  cnoreabbrev ag Ack!
-endif
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_show_hidden = 1
+"   " ag is fast enough that CtrlP doesn't need to cache
+"   let g:ctrlp_use_caching = 0
+"   let g:ackprg = 'ag --vimgrep --smart-case'                                                   
+"   cnoreabbrev ag Ack!
+" endif
+" let g:ctrlp_working_path_mode = 0
+" let g:ctrlp_show_hidden = 1
