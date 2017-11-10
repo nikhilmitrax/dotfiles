@@ -1,9 +1,9 @@
 set relativenumber
 " remap h to insert and use ijkl for inverse T cursor movement
-map h <insert>
-map i <Up>
-map j <Left>
-map k <Down>
+"map h <insert>
+"map i <Up>
+"map j <Left>
+"map k <Down>
 
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -51,6 +51,7 @@ Plugin 'majutsushi/tagbar'
 Plugin 'elzr/vim-json'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
+Plugin 'jaxbot/semantic-highlight.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -85,8 +86,9 @@ nnoremap<Leader>p :PrettierAsync
 
 " Prettifying tyings
 " let ayucolor="mirage"
+let s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
+let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
 colorscheme onedark 
-
 " Airline
 
 let g:airline_theme='onedark'
@@ -125,6 +127,14 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#file#enable_buffer_path = 1
 set cmdheight=2
 let g:deoplete#auto_complete_delay = 0
+inoremap <silent><expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ deoplete#mappings#manual_complete()
+function! s:check_back_space() abort "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
 
 " Prettier
 let g:prettier#exec_cmd_path = "/usr/local/bin/prettier"
