@@ -9,6 +9,7 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
 
+set lazyredraw
 " Vundle Start
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -44,14 +45,16 @@ Plugin 'tpope/vim-sleuth'
 Plugin 'mitermayer/vim-prettier'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mileszs/ack.vim'
-Plugin 'vim-airline/vim-airline-themes'
+"Plugin 'vim-airline/vim-airline-themes'
 Plugin 'dracula/vim'
 Plugin 'ayu-theme/ayu-vim'
-Plugin 'majutsushi/tagbar'
+"Plugin 'majutsushi/tagbar'
 Plugin 'elzr/vim-json'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'jaxbot/semantic-highlight.vim'
+Plugin 'mhinz/vim-startify'
+Plugin 'tomtom/tcomment_vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -81,18 +84,20 @@ set cursorline
 :command JFormat %!jq '.'
 " Somewhat questionable, but needed for language server
 set hidden
-" Useful Shortcuts
-nnoremap<Leader>p :PrettierAsync
 
 " Prettifying tyings
-" let ayucolor="mirage"
-let s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
-let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
-colorscheme onedark 
-" Airline
+let ayucolor="mirage"
+colorscheme dracula 
+"let s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
+"let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
+autocmd Filetype typescript :SemanticHighlight 
 
-let g:airline_theme='onedark'
+
+
+" Airline
+"let g:airline_theme='onedark'
 let g:airline_powerline_fonts = 1
+let g:airline_extensions = ['tabline', 'branch']
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
@@ -140,6 +145,7 @@ endfunction"}}}
 let g:prettier#exec_cmd_path = "/usr/local/bin/prettier"
 let g:prettier#quickfix_enabled = 0
 let g:prettier#autoformat = 0
+nmap <Leader>p <Plug>(Prettier)
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql PrettierAsync
 
 " ALE
@@ -147,15 +153,15 @@ let g:airline#extensions#ale#enabled = 1
 let g:ale_linters = {'typescript': []}
 
 " Syntastic
-let g:syntastic_typescript_checkers = ['tslint']
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"let g:syntastic_typescript_checkers = ['tslint']
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
 
 " Tagbar
 let g:tagbar_type_typescript = {                                                  
