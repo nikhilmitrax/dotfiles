@@ -52,9 +52,12 @@ Plugin 'ayu-theme/ayu-vim'
 Plugin 'elzr/vim-json'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-Plugin 'jaxbot/semantic-highlight.vim'
+Plugin 'IngoHeimbach/semantic-highlight.vim'
 Plugin 'mhinz/vim-startify'
 Plugin 'tomtom/tcomment_vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'ryanoasis/vim-devicons'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -84,12 +87,13 @@ set cursorline
 :command JFormat %!jq '.'
 " Somewhat questionable, but needed for language server
 set hidden
+let mapleader = ","
 
-" Prettifying tyings
+"" Prettifying tyings
 let ayucolor="mirage"
 colorscheme dracula 
-"let s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
-"let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
+let s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
+let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
 autocmd Filetype typescript :SemanticHighlight 
 
 
@@ -112,7 +116,7 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
-" Terminal Mapping (interferes with fzf)
+" Inteferes with something
 " tnoremap <Esc> <C-\><C-n>
 
 " FZF 
@@ -122,10 +126,15 @@ let g:fzf_action = {
       \ }
 nnoremap <c-p> :FZF<cr>
 nnoremap <c-f> :call SearchWordWithAg()<CR>
-
+nnoremap <leader><leader> :Buffers<CR>
 function! SearchWordWithAg()
   execute 'Ag' expand('<cword>')
 endfunction
+
+" NERDTree
+map <C-t> :NERDTreeToggle<CR>
+" Open on startup
+let NERDTreeDirArrows = 1
 
 " Deoplete Config
 let g:deoplete#enable_at_startup = 1
