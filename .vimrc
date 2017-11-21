@@ -58,6 +58,7 @@ Plugin 'tomtom/tcomment_vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plugin 'easymotion/vim-easymotion'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -96,7 +97,12 @@ let s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082
 let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
 autocmd Filetype typescript :SemanticHighlight 
 
-
+" Startify
+let g:startify_fortune_use_unicode = 1
+" Easymotion
+map <Leader>e <Plug>(easymotion-prefix)
+map <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 " Airline
 "let g:airline_theme='onedark'
@@ -115,7 +121,7 @@ nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
-
+let g:airline#extensions#tabline#keymap_ignored_filetypes = ['vimfiler', 'nerdtree']
 " Inteferes with something
 " tnoremap <Esc> <C-\><C-n>
 
@@ -126,7 +132,7 @@ let g:fzf_action = {
       \ }
 nnoremap <c-p> :FZF<cr>
 nnoremap <c-f> :call SearchWordWithAg()<CR>
-nnoremap <leader><leader> :Buffers<CR>
+nnoremap <Leader><Leader> :Buffers<CR>
 function! SearchWordWithAg()
   execute 'Ag' expand('<cword>')
 endfunction
@@ -135,6 +141,13 @@ endfunction
 map <C-t> :NERDTreeToggle<CR>
 " Open on startup
 let NERDTreeDirArrows = 1
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter *
+            \   if !argc()
+            \ |   Startify
+            \ |   NERDTree
+            \ |   wincmd w
+            \ | endif
 
 " Deoplete Config
 let g:deoplete#enable_at_startup = 1
