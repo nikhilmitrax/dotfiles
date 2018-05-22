@@ -1,9 +1,10 @@
+set shell=bash
 set relativenumber
 " remap h to insert and use ijkl for inverse T cursor movement
-"map h <insert>
-"map i <Up>
-"map j <Left>
-"map k <Down>
+" map i <Up>
+" map j <Left>
+" map k <Down>
+" noremap h i
 
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -52,13 +53,16 @@ Plugin 'ayu-theme/ayu-vim'
 Plugin 'elzr/vim-json'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-Plugin 'IngoHeimbach/semantic-highlight.vim'
+"Plugin 'IngoHeimbach/semantic-highlight.vim'
 Plugin 'mhinz/vim-startify'
 Plugin 'tomtom/tcomment_vim'
-Plugin 'scrooloose/nerdtree'
+"Plugin 'scrooloose/nerdtree'
 Plugin 'ryanoasis/vim-devicons'
-Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+" Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'easymotion/vim-easymotion'
+Plugin 'rbgrouleff/bclose.vim'
+Plugin 'francoiscabrol/ranger.vim'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -73,7 +77,7 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-let g:python_host_prog = "/usr/local/bin/python2"
+let g:python_host_prog = "/Users/nikhilmitra/.pyenv/shims/python2"
 let g:python3_host_prog = "/usr/local/bin/python3"
 
 syntax enable
@@ -92,10 +96,16 @@ let mapleader = ","
 
 "" Prettifying tyings
 let ayucolor="mirage"
-colorscheme dracula 
-let s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
-let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
-autocmd Filetype typescript :SemanticHighlight 
+colorscheme onedark 
+"let s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
+"let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
+"autocmd Filetype typescript :SemanticHighlight 
+
+
+" Ranger
+let g:ranger_map_keys = 0
+map <c-t> :Ranger<cr>
+let g:ranger_replace_netrw = 1
 
 " Startify
 let g:startify_fortune_use_unicode = 1
@@ -138,16 +148,16 @@ function! SearchWordWithAg()
 endfunction
 
 " NERDTree
-map <C-t> :NERDTreeToggle<CR>
+"map <C-t> :NERDTreeToggle<CR>
 " Open on startup
-let NERDTreeDirArrows = 1
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter *
-            \   if !argc()
-            \ |   Startify
-            \ |   NERDTree
-            \ |   wincmd w
-            \ | endif
+"let NERDTreeDirArrows = 1
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter *
+"            \   if !argc()
+"            \ |   Startify
+"            \ |   NERDTree
+"            \ |   wincmd w
+"            \ | endif
 
 " Deoplete Config
 let g:deoplete#enable_at_startup = 1
@@ -208,7 +218,8 @@ let g:tagbar_type_typescript = {
 
 " Language Server
 let g:LanguageClient_serverCommands = {
-    \ 'typescript': ['/usr/local/bin/typescript-language-server', '--stdio'],
+    \ 'typescript': ['typescript-language-server', '--stdio'],
+    \ 'python': ['pyls']
     \ }
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_changeThrottle = 0.5
