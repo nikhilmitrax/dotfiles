@@ -115,7 +115,7 @@ map <Leader>w <Plug>(easymotion-bd-w)
 nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 " Airline
-"let g:airline_theme='onedark'
+let g:airline_theme='ayu'
 let g:airline_powerline_fonts = 1
 let g:airline_extensions = ['tabline', 'branch']
 let g:airline#extensions#tabline#enabled = 1
