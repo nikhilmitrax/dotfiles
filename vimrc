@@ -77,8 +77,8 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-let g:python_host_prog = "/Users/nikhilmitra/.pyenv/shims/python2"
-let g:python3_host_prog = "/usr/local/bin/python3"
+"let g:python_host_prog = "/Users/nikhilmitra/.pyenv/shims/python2"
+let g:python3_host_prog = "/Users/nikhilmitra/workspace/sem/semantics-soccer/.venv/bin/python"
 
 syntax enable
 
@@ -183,6 +183,7 @@ autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.gra
 " ALE
 let g:airline#extensions#ale#enabled = 1
 let g:ale_linters = {'typescript': []}
+let g:ale_linters = {'python': []}
 
 " Syntastic
 "let g:syntastic_typescript_checkers = ['tslint']
@@ -219,7 +220,8 @@ let g:tagbar_type_typescript = {
 " Language Server
 let g:LanguageClient_serverCommands = {
     \ 'typescript': ['typescript-language-server', '--stdio'],
-    \ 'python': ['pyls']
+    \ 'python': ['pyls'],
+    \ 'cpp': ['cquery']
     \ }
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_changeThrottle = 0.5
@@ -227,6 +229,9 @@ nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> gD :call LanguageClient_textDocument_references()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+
+autocmd BufWritePre *.py :call LanguageClient_textDocument_formatting()
+
 set signcolumn=yes
 
 " neomake
