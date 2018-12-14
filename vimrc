@@ -28,13 +28,9 @@ Plugin 'VundleVim/Vundle.vim'
 
 " For nvim-typescript
 Plugin 'leafgarland/typescript-vim'
-" Plugin 'mhartington/nvim-typescript'
-" Plugin 'herringtondarkholme/yats.vim'
-" Plugin 'neomake/neomake'
+
 Plugin 'w0rp/ale'
 
-Plugin 'autozimu/LanguageClient-neovim'
-" Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'bling/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
@@ -46,23 +42,21 @@ Plugin 'tpope/vim-sleuth'
 Plugin 'mitermayer/vim-prettier'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mileszs/ack.vim'
-"Plugin 'vim-airline/vim-airline-themes'
 Plugin 'dracula/vim'
 Plugin 'ayu-theme/ayu-vim'
-"Plugin 'majutsushi/tagbar'
 Plugin 'elzr/vim-json'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-"Plugin 'IngoHeimbach/semantic-highlight.vim'
 Plugin 'mhinz/vim-startify'
 Plugin 'tomtom/tcomment_vim'
-"Plugin 'scrooloose/nerdtree'
 Plugin 'ryanoasis/vim-devicons'
-" Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'rbgrouleff/bclose.vim'
 Plugin 'francoiscabrol/ranger.vim'
 
+"LSP
+Plugin 'prabirshrestha/async.vim'
+Plugin 'prabirshrestha/vim-lsp'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -77,7 +71,7 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-"let g:python_host_prog = "/Users/nikhilmitra/.pyenv/shims/python2"
+"let g:python_host_prog = "python2"
 let g:python3_host_prog = "/Users/nikhilmitra/workspace/sem/semantics-soccer/.venv/bin/python"
 
 syntax enable
@@ -90,6 +84,7 @@ set backspace=indent,eol,start
 set cursorline
 :command Q q
 :command JFormat %!jq '.'
+
 " Somewhat questionable, but needed for language server
 set hidden
 let mapleader = ","
@@ -182,8 +177,7 @@ autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.gra
 
 " ALE
 let g:airline#extensions#ale#enabled = 1
-let g:ale_linters = {'typescript': []}
-let g:ale_linters = {'python': []}
+let g:ale_linters = {'python': [], 'typescript':[], 'cpp':[]}
 
 " Syntastic
 "let g:syntastic_typescript_checkers = ['tslint']
@@ -218,20 +212,15 @@ let g:tagbar_type_typescript = {
 
 
 " Language Server
-let g:LanguageClient_serverCommands = {
-    \ 'typescript': ['typescript-language-server', '--stdio'],
-    \ 'python': ['pyls'],
-    \ 'cpp': ['cquery']
-    \ }
-let g:LanguageClient_autoStart = 1
-let g:LanguageClient_changeThrottle = 0.5
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> gD :call LanguageClient_textDocument_references()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-
-autocmd BufWritePre *.py :call LanguageClient_textDocument_formatting()
-
+let g:lsp_signs_enabled = 1 
+if executable('typescript-language-server')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'typescript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+        \ 'whitelist': ['typescript'],
+        \ })
+endif
 set signcolumn=yes
 
 " neomake
