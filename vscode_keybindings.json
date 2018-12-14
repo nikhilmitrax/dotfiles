@@ -177,6 +177,13 @@
     "key": "shift+cmd+1",
     "command": "-editor.action.replaceOne",
     "when": "editorFocus && findWidgetVisible"
+  },
+  {
+    "key": "shift+cmd+1",
+    "command": "workbench.action.moveEditorToPreviousGroup"
+  },
+  {
+    "key": "ctrl+cmd+left",
+    "command": "-workbench.action.moveEditorToPreviousGroup"
   }
 ]
-
