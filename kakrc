@@ -26,23 +26,31 @@ plug "Delapouite/kakoune-buffers" config %{
 
 }
 
-#plug "andreyorst/smarttab.kak" %{
-#    set-option global softtabstop 4
-#    expandtab
-#}
+plug "andreyorst/smarttab.kak" %{
+    hook global BufCreate .* %{set-option global softtabstop 4}
+    hook global BufCreate .* expandtab
+}
+plug "TeddyDD/kakoune-edit-or-dir" %{
+    unalias global e edit
+    alias global e edit-or-dir
+}
 eval %sh{kak-lsp --kakoune -s $kak_session}
-hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <backtab> <c-p> }
+hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <s-tab> <c-p> }
 map global normal D <a-i>w* -docstring 'select word and set it up for search'
-hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <backtab> <c-p> }
+hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <s-tab> <c-p> }
 
 hook global NormalKey y|d|c %{ nop %sh{
       printf %s "$kak_main_reg_dquote" | pbcopy
 }}
 
 map global user P '!pbpaste<ret>'
-
+colorscheme gruvbox
 map global goto z <esc><c-o> -docstring 'Go to previous cursor position'
 map global goto Z <esc><c-i> -docstring 'Go to next cursor position'
+
+set-option global fzf_file_command rg
+set-option global fzf_highlighter bat
+
 # Controversial I guess
 
 map global normal s <a-i>
