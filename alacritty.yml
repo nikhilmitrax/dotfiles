@@ -24,15 +24,15 @@ window:
   # Units are physical pixels; this is not DPI aware.
   # (change requires restart)
   padding:
-    x: 2
-    y: 2
+    x: 5
+    y: 5
 
   # Window decorations
   # Setting this to false will result in window without borders and title bar.
-  decorations: buttonless
+  decorations: full
 
 # Display tabs using this many cells (changes require restart)
-tabspaces: 8
+tabspaces: 4
 
 # When true, bold text is drawn using the bright variant of colors.
 draw_bold_text_with_bright_colors: true
@@ -250,6 +250,11 @@ mouse:
   # To disable this completely, set `faux_scrollback_lines` to 0.
   faux_scrolling_lines: 1
   hide_when_typing: false
+
+scrolling:
+  # Maximum number of lines in the scrollback buffer.
+  # Specifying '0' will disable scrolling.
+  history: 0
 
 cursor:
   # Cursor style
