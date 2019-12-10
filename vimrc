@@ -3,32 +3,60 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'scrooloose/nerdtree'
-"Plug 'tsony-tsonev/nerdtree-git-plugin'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'airblade/vim-gitgutter'
-Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
+Plug 'vim-airline/vim-airline'
 Plug 'scrooloose/nerdcommenter'
-Plug 'cespare/vim-toml'
+Plug 'szw/vim-maximizer'
+Plug 'tpope/vim-vinegar'
 
-Plug 'joshdick/onedark.vim'
+" FZF
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+
+
+"Theme
+"Plug 'joshdick/onedark.vim'
+"Plug 'ayu-theme/ayu-vim'
+Plug 'gruvbox-community/gruvbox'
+
+Plug 'cespare/vim-toml'
 Plug 'rust-lang/rust.vim'
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
-Plug 'vim-airline/vim-airline'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'dag/vim-fish'
 
 " Initialize plugin system
 call plug#end()
 
+filetype plugin on
 
 " Convinient defaults
 :command Q q
 :command W w
 :command Wq wq
 set clipboard=unnamedplus
+:nnoremap <silent> <S-Tab> :bprevious<CR>
+:nnoremap <silent> <Tab> :bnext<CR>
+
+" Window Toggling
+nnoremap <silent><leader><leader> :MaximizerToggle!<CR>
+set winminheight=1
+set winminwidth=1 
 
 
+" NERDCommenter
+let g:NERDDefaultAlign = 'left'
+let g:NERDCommentEmptyLines = 1
+vmap ++ <plug>NERDCommenterToggle
+nmap ++ <plug>NERDCommenterToggle
 
+" theme
+set termguicolors
+"let ayucolor="dark"
+colorscheme gruvbox
 
 " Airline settings
 let g:airline_powerline_fonts = 1
@@ -45,13 +73,21 @@ nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
+
+nmap <A-1> <Plug>AirlineSelectTab1
+nmap <A-2> <Plug>AirlineSelectTab2
+nmap <A-3> <Plug>AirlineSelectTab3
+nmap <A-4> <Plug>AirlineSelectTab4
+nmap <A-5> <Plug>AirlineSelectTab5
+nmap <A-6> <Plug>AirlineSelectTab6
+nmap <A-7> <Plug>AirlineSelectTab7
+nmap <A-8> <Plug>AirlineSelectTab8
+nmap <A-9> <Plug>AirlineSelectTab9
 let g:airline#extensions#tabline#keymap_ignored_filetypes = ['vimfiler', 'nerdtree']
 
 
 " NERDTree"
 nmap <C-n> :NERDTreeToggle<CR>
-vmap ++ <plug>NERDCommenterToggle
-nmap ++ <plug>NERDCommenterToggle
 
 " open NERDTree automatically
 "autocmd StdinReadPre * let s:std_in=1
@@ -84,11 +120,46 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 "autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 
 
-" ctrlp
+" FZF
 set grepprg=rg\ --color=never
-let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-let g:ctrlp_use_caching = 0
+nnoremap <silent><C-p> :Files<Cr>
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%'),
+  \   <bang>0)
+" Terminal buffer options for fzf
 
+"autocmd! FileType fzf
+"autocmd  FileType fzf set noshowmode noruler nonu
+"
+"if has('nvim') && exists('&winblend') && &termguicolors
+"  set winblend=20
+"
+"  hi NormalFloat guibg=None
+"  if exists('g:fzf_colors.bg')
+"    call remove(g:fzf_colors, 'bg')
+"  endif
+"
+"  if stridx($FZF_DEFAULT_OPTS, '--border') == -1
+"    let $FZF_DEFAULT_OPTS .= ' --border'
+"  endif
+"
+"  function! FloatingFZF()
+"    let width = float2nr(&columns * 0.8)
+"    let height = float2nr(&lines * 0.6)
+"    let opts = { 'relative': 'editor',
+"               \ 'row': (&lines - height) / 2,
+"               \ 'col': (&columns - width) / 2,
+"               \ 'width': width,
+"               \ 'height': height }
+"
+"    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+"  endfunction
+"
+"  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+"endif
 
 set number
 set smarttab
@@ -98,7 +169,6 @@ set shiftwidth=2
 " always uses spaces instead of tab characters
 set expandtab
 
-colorscheme onedark
 
 " sync open file with NERDTree
 " " Check if NERDTree is open or active
@@ -123,11 +193,11 @@ let g:coc_global_extensions = [
   \ 'coc-snippets',
   \ 'coc-pairs',
   \ 'coc-tsserver',
-  \ 'coc-eslint', 
   \ 'coc-prettier', 
   \ 'coc-json',
   \ 'coc-vimlsp',
-  \ 'coc-marketplace'
+  \ 'coc-marketplace',
+  \ 'coc-rls'
   \ ]
 
 " from readme
@@ -256,8 +326,9 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " Terminal Shortcuts"
 
-nnoremap <silent> <space>t  :belowright split term://fish <CR>
-tnoremap <Esc> <C-\><C-n>
+nnoremap <silent> <space>t  :belowright 15split term://fish <CR>
+au TermOpen * tnoremap <Esc> <c-\><c-n>
+au FileType fzf tunmap <Esc>
 tnoremap <A-h> <C-\><C-N><C-w>h
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k
@@ -270,9 +341,6 @@ nnoremap <A-h> <C-w>h
 nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
-nnoremap <silent> <C-+> :res +5
-nnoremap <silent> <C--> :res -5
-nnoremap <silent> <C-S-+> :vertical resize +5
-nnoremap <silent> <C-S--> :vertical resize -5
-" start in insert mode"
-autocmd BufNew,BufWinEnter,WinEnter term://* startinsert
+
+" start terminal in insert mode"
+"autocmd BufNew,BufWinEnter,WinEnter term://* startinsert
