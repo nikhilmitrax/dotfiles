@@ -12,15 +12,17 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'szw/vim-maximizer'
 Plug 'tpope/vim-vinegar'
 
-" FZF
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+" Fuzzy Finder
+Plug 'liuchengxu/vim-clap', { 'do': function('clap#helper#build_all') }
+" Plug '/usr/local/opt/fzf'
+" Plug 'junegunn/fzf.vim'
 
 
 "Theme
-"Plug 'joshdick/onedark.vim'
-"Plug 'ayu-theme/ayu-vim'
+Plug 'joshdick/onedark.vim'
+Plug 'ayu-theme/ayu-vim'
 Plug 'gruvbox-community/gruvbox'
+Plug 'kaicataldo/material.vim'
 
 Plug 'cespare/vim-toml'
 Plug 'rust-lang/rust.vim'
@@ -38,8 +40,23 @@ filetype plugin on
 :command W w
 :command Wq wq
 set clipboard=unnamedplus
-:nnoremap <silent> <S-Tab> :bprevious<CR>
-:nnoremap <silent> <Tab> :bnext<CR>
+
+function! PrevBufferTab()
+  bprev
+  if &buftype == 'terminal'
+    bprev
+  endif
+endfunction
+
+function! NextBufferTab()
+  bnext
+  if &buftype == 'terminal'
+    bnext
+  endif
+endfunction
+
+:nnoremap <silent> <S-Tab> :call PrevBufferTab()<CR>
+:nnoremap <silent> <Tab> :call NextBufferTab()<CR>
 
 " Window Toggling
 nnoremap <silent><leader><leader> :MaximizerToggle!<CR>
@@ -57,6 +74,8 @@ nmap ++ <plug>NERDCommenterToggle
 set termguicolors
 "let ayucolor="dark"
 colorscheme gruvbox
+"let g:material_terminal_italics = 1
+"let g:material_theme_style = 'darker'
 
 " Airline settings
 let g:airline_powerline_fonts = 1
@@ -120,15 +139,20 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 "autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 
 
+" Utility Functions
+
+function NormalizeQuotes()
+  %s/"/"/g
+  %s/"/"/g
+endfunction
+
 " FZF
-set grepprg=rg\ --color=never
-nnoremap <silent><C-p> :Files<Cr>
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%'),
-  \   <bang>0)
+if executable("rg")
+    set grepprg=rg\ --vimgrep\ --no-heading
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+endif
+
+nnoremap <silent><C-p> :Clap files<Cr>
 " Terminal buffer options for fzf
 
 "autocmd! FileType fzf
@@ -290,9 +314,10 @@ omap if <Plug>(coc-funcobj-i)
 omap af <Plug>(coc-funcobj-a)
 
 " Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <C-d> <Plug>(coc-range-select)
-xmap <silent> <C-d> <Plug>(coc-range-select)
-
+"nmap <silent> <C-d> <Plug>(coc-range-select)
+"xmap <silent> <C-d> <Plug>(coc-range-select)
+" Use <C-d> to search word under cursor
+nnoremap <silent> gs :Clap grep ++query=<cword><cr>
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
 
@@ -343,4 +368,4 @@ nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
 
 " start terminal in insert mode"
-"autocmd BufNew,BufWinEnter,WinEnter term://* startinsert
+autocmd BufNew,BufWinEnter,WinEnter, BufEnter term://* startinsert
